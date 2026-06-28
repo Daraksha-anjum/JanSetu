@@ -1,0 +1,8 @@
+{
+  "name": "JanSetu",
+  "description": "AI-Powered Hyperlocal Community Platform bridging citizens, communities, and coordinators to resolve civic issues collaboratively.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,635 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Public profile and reputation points of a citizen or coordinator",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique user identifier matching request.auth.uid"
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of the user"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "Avatar image identifier or URL"
+        },
+        "reputationPoints": {
+          "type": "integer",
+          "description": "Civic reputation points earned"
+        },
+        "badge": {
+          "type": "string",
+          "enum": ["Civic Reporter", "Community Guardian", "JanSetu Champion"],
+          "description": "Gamification status badge based on reputation"
+        },
+        "reportsSubmittedCount": {
+          "type": "integer",
+          "description": "Total reports submitted"
+        },
+        "verificationsCount": {
+          "type": "integer",
+          "description": "Total verifications performed"
+        },
+        "communityContributionsCount": {
+          "type": "integer",
+          "description": "Total discussions or comments contributed"
+        },
+        "selectedCommunity": {
+          "type": "string",
+          "description": "Home community selected by the user"
+        },
+        "isCoordinator": {
+          "type": "boolean",
+          "description": "True if the user has official coordinator permissions"
+        }
+      },
+      "required": ["id", "name", "reputationPoints", "badge", "reportsSubmittedCount", "verificationsCount", "communityContributionsCount", "isCoordinator"]
+    },
+    "UserProfilePrivate": {
+      "title": "UserProfilePrivate",
+      "description": "Isolate private PII (Personally Identifiable Information) separate from public fields",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Secure email address of the user"
+        },
+        "mobile": {
+          "type": "string",
+          "description": "Mobile contact number for civic updates"
+        },
+        "location": {
+          "type": "string",
+          "description": "Home neighborhood or sector coordinate representation"
+        }
+      },
+      "required": ["email"]
+    },
+    "IssueReport": {
+      "title": "IssueReport",
+      "description": "Civic defect report with vision AI insights and resolution state",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique report ID"
+        },
+        "reporterId": {
+          "type": "string",
+          "description": "Author user ID matching users/{userId}"
+        },
+        "reporterName": {
+          "type": "string",
+          "description": "Public name of the reporter"
+        },
+        "reporterAvatar": {
+          "type": "string",
+          "description": "Avatar of the reporter"
+        },
+        "title": {
+          "type": "string",
+          "description": "Defect summary title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Elaborate civic issue description"
+        },
+        "image": {
+          "type": "string",
+          "description": "Base64 or secure media URL representing visual evidence (image/video)"
+        },
+        "locationName": {
+          "type": "string",
+          "description": "Readable location address"
+        },
+        "locationCoords": {
+          "type": "object",
+          "description": "Geo-location coordinates"
+        },
+        "community": {
+          "type": "string",
+          "description": "Associated locality/neighborhood"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["Road Damage", "Water Leakage", "Waste Management", "Streetlight Failure", "Drainage Issue", "Public Safety Concern"],
+          "description": "Standardized category detected by Vision AI"
+        },
+        "severity": {
+          "type": "string",
+          "enum": ["Critical", "High", "Medium", "Low"],
+          "description": "Calculated defect severity"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["Critical", "High", "Medium", "Low"],
+          "description": "Urgency classification"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Reported", "Verified", "In Progress", "Resolved"],
+          "description": "Current lifecycle status"
+        },
+        "verificationCount": {
+          "type": "integer",
+          "description": "Total upvotes/verifications from other citizens"
+        },
+        "confirmedBy": {
+          "type": "array",
+          "description": "Array of unique user IDs confirming this issue"
+        },
+        "resolvedBy": {
+          "type": "array",
+          "description": "Array of unique user IDs confirming resolution"
+        },
+        "confidence": {
+          "type": "integer",
+          "description": "Vision AI detection confidence percentage"
+        },
+        "summary": {
+          "type": "string",
+          "description": "AI-generated summary of comments and status"
+        },
+        "safetyRisks": {
+          "type": "string",
+          "description": "AI-diagnosed safety hazards"
+        },
+        "responsibleAuthority": {
+          "type": "string",
+          "description": "AI-targeted municipal body"
+        },
+        "recommendedActions": {
+          "type": "array",
+          "description": "AI-guided action steps for resolution"
+        },
+        "estimatedTimeline": {
+          "type": "string",
+          "description": "AI resolution duration prediction"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Server-side creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Server-side update timestamp"
+        },
+        "isEscalated": {
+          "type": "boolean",
+          "description": "Escalated to higher authorities"
+        },
+        "isHighlighted": {
+          "type": "boolean",
+          "description": "Highlighted by the coordinator for community visibility"
+        },
+        "verificationConfidence": {
+          "type": "integer",
+          "description": "Vision verification accuracy score"
+        },
+        "evidenceStrength": {
+          "type": "string",
+          "description": "Visual diagnostic evidence grading"
+        },
+        "verificationReliability": {
+          "type": "string",
+          "description": "Calculated report reliability grade"
+        },
+        "riskLevel": {
+          "type": "string",
+          "description": "AI-computed civic hazard rating"
+        },
+        "consequencesIfIgnored": {
+          "type": "string",
+          "description": "AI predictive risk penalty description"
+        },
+        "justification": {
+          "type": "string",
+          "description": "AI explanation of classification and severity"
+        }
+      },
+      "required": ["id", "reporterId", "title", "description", "image", "locationName", "community", "category", "severity", "status", "verificationCount", "confirmedBy", "resolvedBy", "createdAt", "updatedAt"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "Discussion post inside an IssueReport's collection",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique comment ID"
+        },
+        "userId": {
+          "type": "string",
+          "description": "The author user ID"
+        },
+        "userName": {
+          "type": "string",
+          "description": "Name of the author"
+        },
+        "userAvatar": {
+          "type": "string",
+          "description": "Avatar icon of the author"
+        },
+        "userBadge": {
+          "type": "string",
+          "description": "Badge status of the author"
+        },
+        "text": {
+          "type": "string",
+          "description": "Body copy of the comment"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Server timestamp when commented"
+        }
+      },
+      "required": ["id", "userId", "userName", "text", "createdAt"]
+    },
+    "TimelineUpdate": {
+      "title": "TimelineUpdate",
+      "description": "Resolution step update logged by authorities, coordinators, or verifiers",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique timeline update ID"
+        },
+        "status": {
+          "type": "string",
+          "description": "New state transitioned to"
+        },
+        "message": {
+          "type": "string",
+          "description": "Detailed update log"
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Server timestamp when logged"
+        },
+        "actorName": {
+          "type": "string",
+          "description": "Name of the status modifier"
+        },
+        "actorRole": {
+          "type": "string",
+          "enum": ["Citizen", "Coordinator", "Authority"],
+          "description": "Role classification of update actor"
+        },
+        "evidenceImage": {
+          "type": "string",
+          "description": "Optional photo or video proving correction progress"
+        }
+      },
+      "required": ["id", "status", "message", "timestamp", "actorName", "actorRole"]
+    },
+    "CommunityInfo": {
+      "title": "CommunityInfo",
+      "description": "Locality data and metadata",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Readable community name"
+        },
+        "memberCount": {
+          "type": "integer",
+          "description": "Active citizen count"
+        },
+        "activeIssuesCount": {
+          "type": "integer",
+          "description": "Count of unresolved issues"
+        },
+        "resolvedIssuesCount": {
+          "type": "integer",
+          "description": "Count of successfully completed corrections"
+        },
+        "coordinatorName": {
+          "type": "string",
+          "description": "Name of primary civic guardian"
+        },
+        "coordinatorAvatar": {
+          "type": "string",
+          "description": "Avatar of the coordinator"
+        }
+      },
+      "required": ["name", "memberCount", "activeIssuesCount", "resolvedIssuesCount", "coordinatorName"]
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "Civic broadcast or meeting notifications posted by coordinators",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique announcement ID"
+        },
+        "title": {
+          "type": "string",
+          "description": "Broadcast heading"
+        },
+        "text": {
+          "type": "string",
+          "description": "Broadcast content details"
+        },
+        "date": {
+          "type": "string",
+          "description": "Publish date"
+        }
+      },
+      "required": ["id", "title", "text", "date"]
+    },
+    "CommunityAIInsights": {
+      "title": "CommunityAIInsights",
+      "description": "AI-Synthesized Locality Civic Intelligence Report Card",
+      "type": "object",
+      "properties": {
+        "community": {
+          "type": "string",
+          "description": "Target neighborhood name"
+        },
+        "mostCommonCategory": {
+          "type": "string",
+          "description": "Most frequent issue category"
+        },
+        "risingConcerns": {
+          "type": "string",
+          "description": "Upward trajectory details"
+        },
+        "highRiskAreas": {
+          "type": "string",
+          "description": "Geographical risk coordinates/zones"
+        },
+        "recentTrends": {
+          "type": "string",
+          "description": "Submission velocity commentary"
+        },
+        "summaryText": {
+          "type": "string",
+          "description": "Dynamic synthesis report statement"
+        },
+        "generatedAt": {
+          "type": "string",
+          "description": "Server-side generation timestamp"
+        },
+        "healthScore": {
+          "type": "integer",
+          "description": "Calculated score out of 100"
+        },
+        "healthScoreExplanation": {
+          "type": "string",
+          "description": "AI explanation of index computation"
+        },
+        "totalIssuesCount": {
+          "type": "integer"
+        },
+        "activeIssuesCount": {
+          "type": "integer"
+        },
+        "resolvedIssuesCount": {
+          "type": "integer"
+        },
+        "criticalIssuesCount": {
+          "type": "integer"
+        },
+        "resolutionRate": {
+          "type": "string"
+        },
+        "weeklyTrends": {
+          "type": "string"
+        },
+        "recurringProblems": {
+          "type": "string"
+        },
+        "risingCategories": {
+          "type": "string"
+        },
+        "emergingProblems": {
+          "type": "string"
+        },
+        "frequentlyAffectedAreas": {
+          "type": "string"
+        }
+      },
+      "required": ["community", "mostCommonCategory", "summaryText", "generatedAt", "healthScore"]
+    },
+    "PredictedInsight": {
+      "title": "PredictedInsight",
+      "description": "Predictive Trend Agent analysis report for a community",
+      "type": "object",
+      "properties": {
+        "communityId": {
+          "type": "string",
+          "description": "Associated community or neighborhood name"
+        },
+        "generatedAt": {
+          "type": "string",
+          "description": "ISO timestamp when prediction was generated"
+        },
+        "predictionSummary": {
+          "type": "string",
+          "description": "Predictive Trend summary statement"
+        },
+        "riskScore": {
+          "type": "integer",
+          "description": "Calculated community risk score 0-100"
+        },
+        "predictedIssues": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of predicted high risk issue categories"
+        },
+        "hotspotLocations": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Predicted high risk localities or hotspots"
+        },
+        "preventiveActions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of preventive actions and recommendations"
+        },
+        "recommendedAuthorities": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Recommended government departments to handle preventative actions"
+        },
+        "confidenceScore": {
+          "type": "integer",
+          "description": "AI confidence level in the prediction"
+        },
+        "issueGrowthTrend": {
+          "type": "string",
+          "description": "Growth trend of issues: Increasing / Stable / Decreasing"
+        },
+        "predictedNewIssuesCount": {
+          "type": "integer",
+          "description": "Predicted number of new issues in next 7 days"
+        },
+        "seasonalRiskIndicators": {
+          "type": "string",
+          "description": "Seasonal or weather-related risk indicators"
+        },
+        "infrastructureRiskLevel": {
+          "type": "string",
+          "description": "Infrastructure risk level rating"
+        },
+        "explanation": {
+          "type": "string",
+          "description": "Explainable AI why prediction was generated"
+        }
+      },
+      "required": ["communityId", "generatedAt", "predictionSummary", "riskScore", "predictedIssues", "hotspotLocations", "preventiveActions", "recommendedAuthorities", "confidenceScore", "issueGrowthTrend", "predictedNewIssuesCount", "infrastructureRiskLevel", "explanation"]
+    },
+    "PreventiveActionsStatus": {
+      "title": "PreventiveActionsStatus",
+      "description": "Tracking status of recommended preventive actions by coordinators",
+      "type": "object",
+      "properties": {
+        "communityId": {
+          "type": "string"
+        },
+        "statuses": {
+          "type": "object",
+          "description": "Mapping of recommendation text to its progress status (Pending / In Progress / Completed)"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      },
+      "required": ["communityId", "statuses", "updatedAt"]
+    },
+    "CoordinatorInsights": {
+      "title": "CoordinatorInsights",
+      "description": "AI-generated coordinator dashboard recommendations, bulletins, escalations, and reports",
+      "type": "object",
+      "properties": {
+        "communityId": {
+          "type": "string"
+        },
+        "generatedAt": {
+          "type": "string"
+        },
+        "generatedBulletins": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": { "type": "string" },
+              "content": { "type": "string" },
+              "priority": { "type": "string" },
+              "generatedAt": { "type": "string" }
+            },
+            "required": ["title", "content", "priority", "generatedAt"]
+          }
+        },
+        "weeklyReports": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "totalReports": { "type": "integer" },
+              "resolvedReports": { "type": "integer" },
+              "activeReports": { "type": "integer" },
+              "communityHealthScore": { "type": "integer" },
+              "trendAnalysis": { "type": "string" },
+              "topConcerns": { "type": "array", "items": { "type": "string" } },
+              "majorAchievements": { "type": "array", "items": { "type": "string" } },
+              "pendingHighPriority": { "type": "array", "items": { "type": "string" } },
+              "recommendedPriorities": { "type": "array", "items": { "type": "string" } },
+              "fullReportText": { "type": "string" },
+              "generatedAt": { "type": "string" }
+            },
+            "required": ["totalReports", "resolvedReports", "activeReports", "communityHealthScore", "trendAnalysis", "topConcerns", "majorAchievements", "pendingHighPriority", "recommendedPriorities", "fullReportText", "generatedAt"]
+          }
+        },
+        "escalationSuggestions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "reportId": { "type": "string" },
+              "reportTitle": { "type": "string" },
+              "recommendedDepartment": { "type": "string" },
+              "reasonForEscalation": { "type": "string" },
+              "suggestedEscalationMessage": { "type": "string" },
+              "priorityLevel": { "type": "string" },
+              "expectedPublicImpact": { "type": "string" }
+            },
+            "required": ["reportId", "reportTitle", "recommendedDepartment", "reasonForEscalation", "suggestedEscalationMessage", "priorityLevel", "expectedPublicImpact"]
+          }
+        },
+        "actionRecommendations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "title": { "type": "string" },
+              "description": { "type": "string" },
+              "urgency": { "type": "string" },
+              "expectedImpact": { "type": "string" },
+              "isCompleted": { "type": "boolean" }
+            },
+            "required": ["id", "title", "description", "urgency", "expectedImpact", "isCompleted"]
+          }
+        }
+      },
+      "required": ["communityId", "generatedAt", "generatedBulletins", "weeklyReports", "escalationSuggestions", "actionRecommendations"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Public user profile and reputation metadata"
+    },
+    "/users/{userId}/private/info": {
+      "schema": "UserProfilePrivate",
+      "description": "Secure storage of PII elements restricted to owner"
+    },
+    "/reports/{reportId}": {
+      "schema": "IssueReport",
+      "description": "Primary issue report details with AI intelligence markers"
+    },
+    "/reports/{reportId}/comments/{commentId}": {
+      "schema": "Comment",
+      "description": "Sub-collection of discussion posts on the report"
+    },
+    "/reports/{reportId}/updates/{updateId}": {
+      "schema": "TimelineUpdate",
+      "description": "Sub-collection of state updates and official logs"
+    },
+    "/communities/{communityId}": {
+      "schema": "CommunityInfo",
+      "description": "Master registered community details"
+    },
+    "/communities/{communityId}/announcements/{announcementId}": {
+      "schema": "Announcement",
+      "description": "Sub-collection of coordinator civic broadcasts"
+    },
+    "/communities/{communityId}/insights/latest": {
+      "schema": "CommunityAIInsights",
+      "description": "Singular latest AI community health analysis report"
+    },
+    "/communityInsights/{insightId}": {
+      "schema": "CommunityAIInsights",
+      "description": "Root collection storing latest AI community health analysis reports"
+    },
+    "/predictedInsights/{insightId}": {
+      "schema": "PredictedInsight",
+      "description": "Root collection storing latest AI predictive trend insights per community"
+    },
+    "/preventiveActionsStatus/{communityId}": {
+      "schema": "PreventiveActionsStatus",
+      "description": "Durable coordinator status tracking for preventive action recommendations"
+    },
+    "/coordinatorInsights/{communityId}": {
+      "schema": "CoordinatorInsights",
+      "description": "Root collection storing AI insights and recommendations for community coordinators"
+    }
+  }
+}

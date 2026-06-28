@@ -1,0 +1,130 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions for security rules
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isCoordinator() {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+        getUserData().isCoordinator == true;
+    }
+
+    // Rules for public User Profiles
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      // Allow creation of own profile. Prevent self-elevation of isCoordinator unless matching a strict control or handled via backend
+      allow create: if isOwner(userId) && 
+        (!request.resource.data.keys().contains('isCoordinator') || request.resource.data.isCoordinator == false);
+      allow update: if isOwner(userId) && 
+        (!request.resource.data.keys().contains('isCoordinator') || request.resource.data.isCoordinator == resource.data.isCoordinator);
+    }
+
+    // Rules for private user profile info (PII)
+    match /users/{userId}/private/info {
+      allow read, write: if isOwner(userId);
+    }
+
+    // Rules for Issue Reports
+    match /reports/{reportId} {
+      allow read: if isAuthenticated();
+      
+      // Citizen must assign reporterId to themselves
+      allow create: if isAuthenticated() && 
+        request.resource.data.reporterId == request.auth.uid &&
+        request.resource.data.title.size() <= 150 &&
+        request.resource.data.description.size() <= 3000;
+
+      // Allow updates:
+      // 1. Owners can update general description/title if status is reported
+      // 2. Any citizen can upvote/confirm, which modifies only specific fields (confirmedBy, verificationCount)
+      // 3. Coordinator can update anything (such as severity, isHighlighted, status, etc.)
+      allow update: if isAuthenticated() && (
+        isCoordinator() ||
+        (request.auth.uid == resource.data.reporterId && resource.data.status == 'Reported' && 
+         request.resource.data.reporterId == resource.data.reporterId &&
+         request.resource.data.createdAt == resource.data.createdAt) ||
+        (
+          // Upvote / Verify update: only confirmedBy, verificationCount, or resolvedBy are changed by standard citizens
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['confirmedBy', 'verificationCount', 'resolvedBy', 'status']) &&
+          // Standard citizens cannot mark as resolved directly without coordinator/authority unless resolving is authenticated
+          (request.resource.data.status != 'Resolved' || isCoordinator())
+        )
+      );
+
+      allow delete: if isCoordinator();
+
+      // Comments sub-collection
+      match /comments/{commentId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated() && 
+          request.resource.data.userId == request.auth.uid &&
+          exists(/databases/$(database)/documents/reports/$(reportId));
+        allow delete: if isAuthenticated() && (request.auth.uid == resource.data.userId || isCoordinator());
+      }
+
+      // Updates sub-collection
+      match /updates/{updateId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated() && (isCoordinator() || request.resource.data.actorRole == 'Citizen');
+      }
+    }
+
+    // Rules for Communities
+    match /communities/{communityId} {
+      allow read: if isAuthenticated();
+      allow write: if isCoordinator();
+
+      match /announcements/{announcementId} {
+        allow read: if isAuthenticated();
+        allow write: if isCoordinator();
+      }
+
+      match /insights/{insightId} {
+        allow read: if isAuthenticated();
+        allow write: if isCoordinator();
+      }
+    }
+
+    // Rules for Community Insights
+    match /communityInsights/{insightId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Rules for Discussion Summaries
+    match /discussionSummaries/{summaryId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Rules for Predicted Insights
+    match /predictedInsights/{insightId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Rules for Preventive Actions Status Tracking
+    match /preventiveActionsStatus/{communityId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Rules for Coordinator Insights
+    match /coordinatorInsights/{communityId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+  }
+}

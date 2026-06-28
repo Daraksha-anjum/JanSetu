@@ -1,0 +1,8 @@
+{
+  "firestore": [
+    {
+      "database": "ai-studio-jansetu-c638b9d6-4f5b-4750-a233-489cab3bf3ed",
+      "rules": "firestore.rules"
+    }
+  ]
+}
