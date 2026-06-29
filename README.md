@@ -4,6 +4,12 @@
 
 ---
 
+## 📄 Documentation
+
+Complete project documentation, system architecture, AI workflow, implementation details, and design decisions are available here:
+
+**Project Documentation:**  
+https://docs.google.com/document/d/1jCCI4gbvdlnIwplwB-YfRLxg4RXad5qXcMKuQ2ffVhc/edit?usp=sharing
 ## 📌 Overview
 
 JanSetu is an intelligent community platform that enables citizens to report civic issues such as potholes, water leakages, broken streetlights, garbage accumulation, and drainage problems. Using Google Gemini Vision, the platform automatically analyzes uploaded images/videos, categorizes issues, estimates severity, and recommends the appropriate municipal authority.
